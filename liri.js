@@ -2,13 +2,9 @@ var keys = require("keys.js");
 
 var fs = require("fs");
 
-var twitterKeys = keys.twitterKeys;
-
-var spotifyKeys = keys.spotifyKeys;
-
 var Twitter = require("twitter");
 
-var client = new Twitter(twitterKeys);
+var client = new Twitter(keys.twitterKeys);
 
 var params = {
   screen_name: "EhhWhateves"
@@ -16,7 +12,7 @@ var params = {
 
 var Spotify = require("node-spotify-api");
 
-var spotify = new Spotify(spotifyKeys);
+var spotify = new Spotify(keys.spotifyKeys);
 
 var request = require("request");
 
