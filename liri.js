@@ -54,6 +54,9 @@ function myTweets() {
 }
 
 function spotifyThis() {
+	if (value == "") {
+		value = "The+Sign+Ace+of+Base";
+	}
   spotify.search({ type: 'track', query: value }, function(err, data) {
     if (err) {
       console.log('Error occurred: ' + err);
@@ -62,18 +65,18 @@ function spotifyThis() {
     var artistArr = [];
     for (var i = 0; i < song.artists.length; i++) {
     	artistArr.push(song.artists[i].name + " ");
-    	// if (i < 0) {
-    	// 	artistArr.push(", " + song.artists[i].name);
-    	// }
     }
     console.log("Artists: " + artistArr);
     console.log("Song name: " + song.name);
-    console.log("Preview: "+ song.href);
-    console.log("Album: " + song.album.name)
+    console.log("Preview: "+ song.preview_url);
+    console.log("Album: " + song.album.name);
   });
 }
 
 function movieThis(){
+	if (value == "") {
+		value = "Mr+Nobody";
+	}
 	request("http://www.omdbapi.com/?t=" + value + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
 		if (error) {
       console.log('Error: ' + error);
