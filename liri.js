@@ -30,7 +30,19 @@ var params = {
 
 var action = process.argv[2];
 
-var value = process.argv[3];
+var value = parseInput(process.argv, 3);
+
+function parseInput(arr, st){
+	var urlArg = "";
+	for (i = st; i < arr.length; i++) {
+	  if (i > st && i < arr.length) {
+	    urlArg = urlArg + "+" + arr[i];
+	  } else {
+	    urlArg += arr[i];
+	  }
+	}
+	return urlArg;
+}
 
 function myTweets() {
   client.get("statuses/user_timeline", params, function(error, tweets, response) {
@@ -42,15 +54,7 @@ function myTweets() {
 }
 
 function spotifyThis() {
-	var songInput = "";
-	for (i = 3; i < process.argv.length; i++) {
-	  if (i > 3 && i < process.argv.length) {
-	    songInput = songInput + "+" + process.argv[i];
-	  } else {
-	    songInput += process.argv[i];
-	  }
-	}
-  spotify.search({ type: 'track', query: songInput }, function(err, data) {
+  spotify.search({ type: 'track', query: value }, function(err, data) {
     if (err) {
       console.log('Error occurred: ' + err);
     }
@@ -70,17 +74,9 @@ function spotifyThis() {
 }
 
 function movieThis(){
-	var movieInput = "";
-	for (i = 3; i < process.argv.length; i++) {
-	  if (i > 3 && i < process.argv.length) {
-	    movieInput = movieInput + "+" + process.argv[i];
-	  } else {
-	    movieInput += process.argv[i];
-	  }
-	}
-	request("http://www.omdbapi.com/?t=" + movieInput + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+	request("http://www.omdbapi.com/?t=" + value + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
 		if (error) {
-      console.log('Error occurred: ' + error);
+      console.log('Error: ' + error);
     }
     var movie = JSON.parse(body);
 		console.log("Title: " + movie.Title);
@@ -94,15 +90,31 @@ function movieThis(){
 	})
 }
 
-switch (action) {
-  case "my-tweets":
-    myTweets();
-    break;
-  case "spotify-this-song":
-  	spotifyThis();
-  	break;
-  case "movie-this":
-  	movieThis();
-  	break;
-    // case "do-what-it-says":
+function doWhat(){
+	fs.readFile("random.txt", "utf8", function(error, data) {
+		if (error) {console.log("Error: " + error)}
+		var dataArr = data.split(",");
+		action = dataArr[0];
+		value = parseInput(dataArr, 1);
+		parseAction(action);
+	});
 }
+
+function parseAction(act){
+	switch (act) {
+	  case "my-tweets":
+	    myTweets();
+	    break;
+	  case "spotify-this-song":
+	  	spotifyThis();
+	  	break;
+	  case "movie-this":
+	  	movieThis();
+	  	break;
+	  case "do-what-it-says":
+	  	doWhat();
+	  	break;
+	}
+}
+
+parseAction(action);
