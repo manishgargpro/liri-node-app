@@ -8,25 +8,17 @@ var spotifyKeys = keys.spotifyKeys;
 
 var Twitter = require("twitter");
 
-var client = new Twitter({
-  consumer_key: 'Isc8YLs6kXbZvHhznToytZBG9',
-  consumer_secret: '8H2STzzucVhVwt6mFi0sMfwH3jCpph380zLpmCD6YVdYiMwWPg',
-  access_token_key: '899361522367025153-CZviOTKlOSJOibCIbHDSBeQvUPlfaxI',
-  access_token_secret: 'Hh7zsZrxKWnyoIgn0YMendvw80J4jvNnhG1sJB1fJc8WZ'
-});
-
-var Spotify = require("node-spotify-api");
-
-var spotify = new Spotify({
-  id: "a68c48ab60b345e49f30d5678822c3a1",
-  secret: "cc6bc9071cc5409e8498187dd1f9a299"
-});
-
-var request = require("request");
+var client = new Twitter(twitterKeys);
 
 var params = {
   screen_name: "EhhWhateves"
-}
+};
+
+var Spotify = require("node-spotify-api");
+
+var spotify = new Spotify(spotifyKeys);
+
+var request = require("request");
 
 var action = process.argv[2];
 
