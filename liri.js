@@ -32,12 +32,27 @@ function parseInput(arr, st){
 	return urlArg;
 }
 
+function writeLog(obj){
+	fs.appendFile("log.txt", ">>>" + obj + "\n", function(error){
+		if (error) {
+	    console.log(error);
+	  }
+	})
+}
+
 function myTweets() {
   client.get("statuses/user_timeline", params, function(error, tweets, response) {
-    if (error) { console.log(error) };
-    for (var i = 0; i < tweets.length; i++) {
-      console.log(tweets[i].text + ": " + tweets[i].created_at);
-    }
+    if (error) {
+    	console.log(error);
+    	writeLog(action + ": " + error + "\n");
+    } else {
+			var logText = "";
+	    for (var i = 0; i < tweets.length; i++) {
+	      console.log(tweets[i].text + ": " + tweets[i].created_at);
+	    	logText += tweets[i].text + ": " + tweets[i].created_at + "\n"
+	    }
+      writeLog(action + "\n" + ": " + logText);
+	  }
   })
 }
 
@@ -48,36 +63,46 @@ function spotifyThis() {
   spotify.search({ type: 'track', query: value }, function(err, data) {
     if (err) {
       console.log('Error occurred: ' + err);
-    }
-    var song = data.tracks.items[0];
-    var artistArr = [];
-    for (var i = 0; i < song.artists.length; i++) {
-    	artistArr.push(song.artists[i].name + " ");
-    }
-    console.log("Artists: " + artistArr);
-    console.log("Song name: " + song.name);
-    console.log("Preview: "+ song.preview_url);
-    console.log("Album: " + song.album.name);
+      writeLog(action + ": " + err + "\n");
+    } else {
+	    var song = data.tracks.items[0];
+	    var artistArr = [];
+	    for (var i = 0; i < song.artists.length; i++) {
+	    	artistArr.push(song.artists[i].name + " ");
+	    }
+	    console.log("Artists: " + artistArr);
+	    console.log("Song name: " + song.name);
+	    console.log("Preview: " + song.preview_url);
+	    console.log("Album: " + song.album.name);
+			var logText = "";
+	    logText = "Artists: " + artistArr + "\n" + "Song name: " + song.name + "\n" + "Preview: " + song.preview_url + "\n" + "Album: " + song.album.name + "\n";
+	    writeLog(action + ": " + "\n" + logText);
+  	}
   });
 }
 
 function movieThis(){
+	var logText = "";
 	if (value == "") {
 		value = "Mr+Nobody";
 	}
 	request("http://www.omdbapi.com/?t=" + value + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
 		if (error) {
       console.log('Error: ' + error);
-    }
-    var movie = JSON.parse(body);
-		console.log("Title: " + movie.Title);
-		console.log("Year: " + movie.Year);
-		console.log("IMDB: " + movie.Ratings[0].Value);
-		console.log("Rotten Tomatoes: " + movie.Ratings[1].Value);
-		console.log("Country: " + movie.Country);
-		console.log("Language: " + movie.Language);
-		console.log("Plot: " + movie.Plot);
-		console.log("Cast: " + movie.Actors);
+      writeLog(action + ": " + error + "\n");
+    } else{
+	    var movie = JSON.parse(body);
+			console.log("Title: " + movie.Title);
+			console.log("Year: " + movie.Year);
+			console.log("IMDB: " + movie.Ratings[0].Value);
+			console.log("Rotten Tomatoes: " + movie.Ratings[1].Value);
+			console.log("Country: " + movie.Country);
+			console.log("Language: " + movie.Language);
+			console.log("Plot: " + movie.Plot);
+			console.log("Cast: " + movie.Actors);
+			logText = "Title: " + movie.Title + "\n" + "Year: " + movie.Year + "\n" + "IMDB: " + movie.Ratings[0].Value + "\n" + "Rotten Tomatoes: " + movie.Ratings[1].Value + "\n" + "Country: " + movie.Country + "\n" + "Language: " + movie.Language + "\n" + "Plot: " + movie.Plot + "\n" + "Cast: " + movie.Actors + "\n";
+			writeLog(action + ": " + "\n" + logText)
+		}
 	})
 }
 
